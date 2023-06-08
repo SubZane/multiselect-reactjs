@@ -17,3 +17,12 @@ export type DataType = {
 	value: string
 	text: string
 }
+
+export type CheckboxType = {
+	value: string
+	text: string
+	isChecked?: boolean
+	visible?: boolean
+}
+
+export type SelectedType = Array<string>

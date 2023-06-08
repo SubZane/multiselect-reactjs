@@ -8,59 +8,59 @@ const root = createRoot(container!)
 
 const listData = [
 	{
-		value: 'demo',
+		value: 'demo1',
 		text: 'Voluptate sit Lorem consequat dolore ',
 	},
 	{
-		value: 'demo',
+		value: 'demo2',
 		text: 'Dolore pariatur duis do culpa commodo',
 	},
 	{
-		value: 'demo',
+		value: 'demo3',
 		text: 'Duis do culpa commodo',
 	},
 	{
-		value: 'demo',
+		value: 'demo4',
 		text: 'Aute cillum fugiat quis dolor',
 	},
 	{
-		value: 'demo',
+		value: 'demo5',
 		text: 'Amet incididunt adipisicing consectetur',
 	},
 	{
-		value: 'demo',
+		value: 'demo6',
 		text: 'Magna velit ad sunt incididunt',
 	},
 	{
-		value: 'demo',
+		value: 'demo7',
 		text: 'Aliqua id duis elit ex voluptate est',
 	},
 	{
-		value: 'demo',
+		value: 'demo8',
 		text: 'Voluptate sit Lorem consequat dolore ',
 	},
 	{
-		value: 'demo',
+		value: 'demo9',
 		text: 'Dolore pariatur duis do culpa commodo',
 	},
 	{
-		value: 'demo',
+		value: 'demo10',
 		text: 'Duis do culpa commodo',
 	},
 	{
-		value: 'demo',
+		value: 'demo11',
 		text: 'Aute cillum fugiat quis dolor',
 	},
 	{
-		value: 'demo',
+		value: 'demo12',
 		text: 'Amet incididunt adipisicing consectetur',
 	},
 	{
-		value: 'demo',
+		value: 'demo13',
 		text: 'Magna velit ad sunt incididunt',
 	},
 	{
-		value: 'demo',
+		value: 'demo14',
 		text: 'Aliqua id duis elit ex voluptate est',
 	},
 ]
@@ -68,7 +68,13 @@ const listData = [
 function MultiSelectContainer() {
 	return (
 		<React.Fragment>
-			<MultiSelectComponent width="350px" maxHeight="50vh" listData={listData} />
+			<MultiSelectComponent
+				checkAll={true}
+				selected={['demo1', 'demo7']}
+				width="350px"
+				maxHeight="50vh"
+				listData={listData}
+			/>
 		</React.Fragment>
 	)
 }

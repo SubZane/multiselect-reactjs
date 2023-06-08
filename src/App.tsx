@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 
 import { css, styled } from './helpers/theme'
-import { DataType, ElementTypes, ListItemTypes, ListTypes, ListWrapperTypes } from './helpers/types'
+import { CheckboxType, ElementTypes, ListItemTypes, ListTypes, ListWrapperTypes, SelectedType } from './helpers/types'
+import { useEffectOnce } from './helpers/usehooks-ts'
 import { useOutsideClick } from './helpers/useOutsideClick'
 
 const Wrapper = styled.div<ElementTypes>`
@@ -114,51 +115,105 @@ const Filterbox = styled.div<ElementTypes>`
 interface Interface {
 	width: string
 	maxHeight: string
-	listData: DataType[]
+	listData: CheckboxType[]
 	open?: boolean
+	checkAll?: boolean
+	selected: SelectedType
 }
 
 function MultiSelectComponent(props: Interface) {
 	const [toggleList, setToggleList] = useState<boolean>(props.open ? props.open : false)
-	const [search, setSearch] = useState('')
+	const [isCheckAll, setIsCheckAll] = useState<boolean>(false)
+	const [checkboxes, SetCheckboxes] = useState<CheckboxType[]>(props.listData)
+
+	useEffectOnce(() => {
+		const CheckboxList = checkboxes.map((v) => ({
+			...v,
+			isChecked: props.selected.includes(v.value) ? true : false,
+			visible: true,
+		}))
+		SetCheckboxes(CheckboxList)
+	})
 
 	const ref = useOutsideClick(() => {
 		setToggleList(false)
 	})
 
-	const filteredList = useMemo(() => {
-		if (search) {
-			return props.listData.filter((item) => item.text.toLowerCase().indexOf(search.toLocaleLowerCase()) > -1)
-		}
-		return props.listData
-	}, [props.listData, search])
+	function ToggleAllCheckboxes() {
+		const new_checkboxes = checkboxes.map((item) => {
+			if (!item.visible) {
+				return {
+					...item,
+					isChecked: false,
+				}
+			} else {
+				return {
+					...item,
+					isChecked: !isCheckAll,
+				}
+			}
+		})
+		SetCheckboxes(new_checkboxes)
+		setIsCheckAll(!isCheckAll)
+	}
 
-	function ToggleList() {
-		setToggleList(!toggleList)
+	function FilterCheckboxes(value: string) {
+		const new_checkboxes = checkboxes.map((item) => {
+			if (item.text.toLocaleLowerCase().includes(value.toLocaleLowerCase())) {
+				return {
+					...item,
+					visible: true,
+				}
+			} else {
+				return {
+					...item,
+					visible: false,
+					isChecked: false,
+				}
+			}
+		})
+		SetCheckboxes(new_checkboxes)
 	}
 
 	return (
 		<Wrapper ref={ref}>
 			<MultiSelect>
-				<Button type="button" onClick={ToggleList} aria-haspopup="true">
+				<Button type="button" onClick={() => setToggleList(!toggleList)} aria-haspopup="true">
 					Select from Options
 				</Button>
 				<ListWrapper expanded={toggleList}>
 					<Filterbox>
-						<Filter type="text" name="search" value={search} onChange={(e) => setSearch(e.target.value)}></Filter>
+						<Filter type="text" name="filter" onChange={(e) => FilterCheckboxes(e.target.value)}></Filter>
 					</Filterbox>
 
 					<List maxHeight={props.maxHeight} width={props.width} role="listbox" aria-expanded={toggleList}>
-						{filteredList.length > 0 ? (
-							filteredList &&
-							filteredList.map((item, index) => (
-								<ListItem width={props.width} key={index} role="option">
-									<Label>
-										<Checkbox type="checkbox" name={item.value} value={item.value} />
-										<Text>{item.text}</Text>
-									</Label>
-								</ListItem>
-							))
+						{props.checkAll && (
+							<ListItem width={props.width} role="option">
+								<Label>
+									<Checkbox onClick={ToggleAllCheckboxes} type="checkbox" />
+									<Text>{isCheckAll ? <b>Unheck All</b> : <b>Check All</b>}</Text>
+								</Label>
+							</ListItem>
+						)}
+
+						{checkboxes && checkboxes.length > 0 ? (
+							checkboxes &&
+							checkboxes.map(
+								(item, index) =>
+									item.visible && (
+										<ListItem width={props.width} key={Math.random()} role="option">
+											<Label>
+												<Checkbox
+													type="checkbox"
+													defaultChecked={item.isChecked}
+													name={item.value}
+													value={item.value}
+												/>
+												<Text>{item.text}</Text>
+											</Label>
+										</ListItem>
+									)
+							)
 						) : (
 							<></>
 						)}
