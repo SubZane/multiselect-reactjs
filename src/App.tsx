@@ -1,95 +1,30 @@
 import React, { useMemo, useState } from 'react'
 
-import { css, styled } from './theme'
-import { useOutsideClick } from './useOutsideClick'
-
-const listData = [
-	{
-		value: 'demo',
-		text: 'Voluptate sit Lorem consequat dolore ',
-	},
-	{
-		value: 'demo',
-		text: 'Dolore pariatur duis do culpa commodo',
-	},
-	{
-		value: 'demo',
-		text: 'Duis do culpa commodo',
-	},
-	{
-		value: 'demo',
-		text: 'Aute cillum fugiat quis dolor',
-	},
-	{
-		value: 'demo',
-		text: 'Amet incididunt adipisicing consectetur',
-	},
-	{
-		value: 'demo',
-		text: 'Magna velit ad sunt incididunt',
-	},
-	{
-		value: 'demo',
-		text: 'Aliqua id duis elit ex voluptate est',
-	},
-	{
-		value: 'demo',
-		text: 'Voluptate sit Lorem consequat dolore ',
-	},
-	{
-		value: 'demo',
-		text: 'Dolore pariatur duis do culpa commodo',
-	},
-	{
-		value: 'demo',
-		text: 'Duis do culpa commodo',
-	},
-	{
-		value: 'demo',
-		text: 'Aute cillum fugiat quis dolor',
-	},
-	{
-		value: 'demo',
-		text: 'Amet incididunt adipisicing consectetur',
-	},
-	{
-		value: 'demo',
-		text: 'Magna velit ad sunt incididunt',
-	},
-	{
-		value: 'demo',
-		text: 'Aliqua id duis elit ex voluptate est',
-	},
-]
-
-type ElementTypes = {}
-
-type ListTypes = {
-	expanded: boolean
-}
+import { css, styled } from './helpers/theme'
+import { DataType, ElementTypes, ListItemTypes, ListTypes, ListWrapperTypes } from './helpers/types'
+import { useOutsideClick } from './helpers/useOutsideClick'
 
 const Wrapper = styled.div<ElementTypes>`
 	display: flex;
+	width: 100%;
 `
 
 const MultiSelect = styled.div<ElementTypes>`
 	position: relative;
 	cursor: pointer;
+	width: 100%;
 `
 
 const Button = styled.button<ElementTypes>`
+	width: 100%;
+	text-align: left;
 	appearance: none;
 	background: #ec7574;
 	color: #fff;
 	border: 0;
 	padding: 13px 44px 13px 24px;
 	border-radius: 25px;
-	text-align: left;
 	position: relative;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	cursor: pointer;
 	outline: none;
 	&:after {
 		content: '';
@@ -105,7 +40,7 @@ const Button = styled.button<ElementTypes>`
 	}
 `
 
-const ListWrapper = styled.div<ListTypes>`
+const ListWrapper = styled.div<ListWrapperTypes>`
 	position: absolute;
 	z-index: 10;
 	border-radius: 24px;
@@ -120,21 +55,21 @@ const ListWrapper = styled.div<ListTypes>`
 		`}
 `
 
-const List = styled.ul<ElementTypes>`
-	max-height: 50vh;
+const List = styled.ul<ListTypes>`
+	max-height: ${(props) => props.maxHeight || '50vh'};
 	list-style: none;
 	padding: 0;
 	margin: 0;
+	width: ${(props) => props.width || 'auto'};
 	border-radius: 24px;
 	overflow-y: scroll;
 	overflow-x: hidden;
 `
 
-const ListItem = styled.li<ElementTypes>`
+const ListItem = styled.li<ListItemTypes>`
 	display: block;
+	width: ${(props) => props.width || 'auto'};
 	padding-left: 13px;
-	max-width: 300px;
-	width: 300px;
 	&:hover,
 	&:focus {
 		outline: none;
@@ -176,8 +111,15 @@ const Filterbox = styled.div<ElementTypes>`
 	margin: 20px 24px 15px 24px;
 `
 
-function MultiSelectComponent() {
-	const [toggleList, setToggleList] = useState<boolean>(true)
+interface Interface {
+	width: string
+	maxHeight: string
+	listData: DataType[]
+	open?: boolean
+}
+
+function MultiSelectComponent(props: Interface) {
+	const [toggleList, setToggleList] = useState<boolean>(props.open ? props.open : false)
 	const [search, setSearch] = useState('')
 
 	const ref = useOutsideClick(() => {
@@ -186,10 +128,10 @@ function MultiSelectComponent() {
 
 	const filteredList = useMemo(() => {
 		if (search) {
-			return listData.filter((item) => item.text.toLowerCase().indexOf(search.toLocaleLowerCase()) > -1)
+			return props.listData.filter((item) => item.text.toLowerCase().indexOf(search.toLocaleLowerCase()) > -1)
 		}
-		return listData
-	}, [search])
+		return props.listData
+	}, [props.listData, search])
 
 	function ToggleList() {
 		setToggleList(!toggleList)
@@ -206,13 +148,13 @@ function MultiSelectComponent() {
 						<Filter type="text" name="search" value={search} onChange={(e) => setSearch(e.target.value)}></Filter>
 					</Filterbox>
 
-					<List role="listbox" aria-expanded="false">
+					<List maxHeight={props.maxHeight} width={props.width} role="listbox" aria-expanded={toggleList}>
 						{filteredList.length > 0 ? (
 							filteredList &&
 							filteredList.map((item, index) => (
-								<ListItem key={index} role="option">
+								<ListItem width={props.width} key={index} role="option">
 									<Label>
-										<Checkbox type="checkbox" name="Color" value={item.value} />
+										<Checkbox type="checkbox" name={item.value} value={item.value} />
 										<Text>{item.text}</Text>
 									</Label>
 								</ListItem>
