@@ -2,6 +2,11 @@
 	"name": "multiselect-reactjs",
 	"version": "1.0.0",
 	"private": false,
+	"description": "multiselect-reactjs is a multiselect component written in ReactJS with TypeScript and Styled Components.",
+	"repository": "https://subzane@github.com/SubZane/multiselect-reactjs.git",
+	"homepage": "https://subzane.github.io/multiselect-reactjs",
+	"bugs": "https://github.com/SubZane/multiselect-reactjs/issues",
+	"author": "Andreas Lee-Norman <andreas@lee-norman.com>",
 	"dependencies": {
 		"@types/node": "^16.7.13",
 		"@types/react": "^18.0.0",
