@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/static/js/main.4859d71a.js",
-    "index.html": "/index.html",
-    "main.4859d71a.js.map": "/static/js/main.4859d71a.js.map"
+    "main.js": "/multiselect-reactjs/static/js/main.d9e3154f.js",
+    "index.html": "/multiselect-reactjs/index.html",
+    "main.d9e3154f.js.map": "/multiselect-reactjs/static/js/main.d9e3154f.js.map"
   },
   "entrypoints": [
-    "static/js/main.4859d71a.js"
+    "static/js/main.d9e3154f.js"
   ]
 }
