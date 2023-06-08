@@ -175,6 +175,19 @@ function MultiSelectComponent(props: Interface) {
 		SetCheckboxes(new_checkboxes)
 	}
 
+	function handleCheck(itemValue: string) {
+		const new_checkboxes = checkboxes.map((item) => {
+			if (item.value === itemValue) {
+				return {
+					...item,
+					isChecked: !item.isChecked,
+				}
+			}
+			return item
+		})
+		SetCheckboxes(new_checkboxes)
+	}
+
 	return (
 		<Wrapper ref={ref}>
 			<MultiSelect>
@@ -201,11 +214,12 @@ function MultiSelectComponent(props: Interface) {
 							checkboxes.map(
 								(item, index) =>
 									item.visible && (
-										<ListItem width={props.width} key={Math.random()} role="option">
+										<ListItem width={props.width} key={item.value} role="option">
 											<Label>
 												<Checkbox
 													type="checkbox"
-													defaultChecked={item.isChecked}
+													checked={item.isChecked}
+													onChange={() => handleCheck(item.value)}
 													name={item.value}
 													value={item.value}
 												/>
