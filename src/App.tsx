@@ -105,20 +105,14 @@ const Button = styled.button<ElementTypes>`
 	}
 `
 
-const List = styled.ul<ListTypes>`
+const ListWrapper = styled.div<ListTypes>`
 	position: absolute;
-	left: 0;
-	top: 100%;
-	background: #fff;
-	box-shadow: 0 1px 4px rgba(150, 150, 150, 0.65);
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	border-radius: 24px;
 	z-index: 10;
+	border-radius: 24px;
 	visibility: hidden;
-	overflow: auto;
-	max-height: 70vh;
+	background: #fff;
+	overflow: hidden;
+	box-shadow: 0 1px 4px rgba(150, 150, 150, 0.65);
 	${(props) =>
 		props.expanded === true &&
 		css`
@@ -126,10 +120,18 @@ const List = styled.ul<ListTypes>`
 		`}
 `
 
+const List = styled.ul<ElementTypes>`
+	max-height: 50vh;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-radius: 24px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+`
+
 const ListItem = styled.li<ElementTypes>`
 	display: block;
-	align-items: center;
-	overflow: hidden;
 	padding-left: 13px;
 	max-width: 300px;
 	width: 300px;
@@ -171,14 +173,11 @@ const Filter = styled.input<ElementTypes>`
 const Filterbox = styled.div<ElementTypes>`
 	border: 1px solid black;
 	border-radius: 15px;
-	margin-top: 20px;
-	margin-left: 10px;
-	margin-right: 24px;
-	margin-bottom: 15px;
+	margin: 20px 24px 15px 24px;
 `
 
 function MultiSelectComponent() {
-	const [toggleList, setToggleList] = useState<boolean>(false)
+	const [toggleList, setToggleList] = useState<boolean>(true)
 	const [search, setSearch] = useState('')
 
 	const ref = useOutsideClick(() => {
@@ -202,26 +201,27 @@ function MultiSelectComponent() {
 				<Button type="button" onClick={ToggleList} aria-haspopup="true">
 					Select from Options
 				</Button>
-				<List expanded={toggleList} role="listbox" aria-expanded="false">
-					<ListItem>
-						<Filterbox>
-							<Filter type="text" name="search" value={search} onChange={(e) => setSearch(e.target.value)}></Filter>
-						</Filterbox>
-					</ListItem>
-					{filteredList.length > 0 ? (
-						filteredList &&
-						filteredList.map((item, index) => (
-							<ListItem key={index} role="option">
-								<Label>
-									<Checkbox type="checkbox" name="Color" value={item.value} />
-									<Text>{item.text}</Text>
-								</Label>
-							</ListItem>
-						))
-					) : (
-						<></>
-					)}
-				</List>
+				<ListWrapper expanded={toggleList}>
+					<Filterbox>
+						<Filter type="text" name="search" value={search} onChange={(e) => setSearch(e.target.value)}></Filter>
+					</Filterbox>
+
+					<List role="listbox" aria-expanded="false">
+						{filteredList.length > 0 ? (
+							filteredList &&
+							filteredList.map((item, index) => (
+								<ListItem key={index} role="option">
+									<Label>
+										<Checkbox type="checkbox" name="Color" value={item.value} />
+										<Text>{item.text}</Text>
+									</Label>
+								</ListItem>
+							))
+						) : (
+							<></>
+						)}
+					</List>
+				</ListWrapper>
 			</MultiSelect>
 		</Wrapper>
 	)
