@@ -2,7 +2,6 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 
 import MultiSelectComponent from './App'
-import { multiSelectTheme, ThemeProvider } from './helpers/theme'
 
 const container = document.getElementById('root')
 const root = createRoot(container!)
@@ -69,9 +68,7 @@ const listData = [
 function MultiSelectContainer() {
 	return (
 		<React.Fragment>
-			<ThemeProvider theme={multiSelectTheme}>
-				<MultiSelectComponent width="350px" maxHeight="50vh" listData={listData} />
-			</ThemeProvider>
+			<MultiSelectComponent width="350px" maxHeight="50vh" listData={listData} />
 		</React.Fragment>
 	)
 }
